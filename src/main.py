@@ -1,24 +1,33 @@
 from fastapi import FastAPI
+from pydantic import BaseModel
 
-# import redis
 
-# r = redis.Redis(host="redis123", port=6379)
+class Item(BaseModel):
+    name: str
+    description: str | None = None
+    price: float
+    tax: float | None = None
+
+
 app = FastAPI()
 
-# import debugpy
-
-# debugpy.listen(("0.0.0.0", 5678))
-# print("Waiting for client to attach...")
-# debugpy.wait_for_client()
-
-
 @app.get("/")
-def read_root():
-    return {"Hello": "World1111212"}
+async def get_default():
+    return {"message": "Hello all bro!!", "framework": "fast-api"}
+
+@app.post("/items/")
+async def create_item(item: Item):
+    return item
 
 
-# @app.get("/hits")
-# def read_root():
-#     r.set("foo", "bar")
-#     r.incr("hits")
-#     return {"Number of hits:": r.get("hits"), "foo": r.get("foo")}
+@app.put("/items/{item_id}")
+async def create_item(item_id: int, item: Item):
+    return {"item_id": item_id, **item.dict()}
+
+
+@app.get("/items/")
+async def read_items(q: str | None = None):
+    results = {"items": [{"item_id": "Foo"}, {"item_id": "Bar"}]}
+    if q:
+        results.update({"q": q})
+    return results
