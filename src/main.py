@@ -18,6 +18,9 @@ class Item(BaseModel):
 async def get_default():
     return {"message": "Hello all bro!!", "framework": "fast-api"}
 
+@app.get("/author")
+async def get_default():
+    return {"author": "I\'m Samreach!!", "message": "Heheh hello ma bro"}
 
 @app.put("/items/{item_id}")
 async def update_item(item_id: int, item: Item = Body(embed=True)):
