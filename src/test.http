@@ -1,0 +1,9 @@
+POST http://localhost:8000/demo-v2
+
+{
+    "wsCode": "demov2_test",
+    "param": {
+        "isdn": "090192",
+        "number": "hshsh"
+    }
+}

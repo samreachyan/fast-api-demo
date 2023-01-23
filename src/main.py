@@ -1,4 +1,4 @@
-from typing import Union
+from typing import Union, List
 
 from fastapi import FastAPI, Path, Query, Body
 from pydantic import BaseModel, Field
@@ -13,13 +13,23 @@ class Item(BaseModel):
     price: float = Field(gt=0, description="The price must be greater than zero")
     tax: Union[float, None] = None
 
+class wsServiceIn(BaseModel):
+    wsCode: str
+    param: dict = {}
+
+
+class wsServiceOut(BaseModel):
+    status: str
+    message: str
+    data: dict = {}
+
 
 @app.get("/")
 async def get_default():
     return {"message": "Hello all bro!!", "framework": "fast-api"}
 
 @app.get("/author")
-async def get_default():
+async def get_author():
     return {"author": "I\'m Samreach!!", "message": "Heheh hello ma bro"}
 
 @app.put("/items/{item_id}")
@@ -37,3 +47,12 @@ async def read_items(
     if q:
         results.update({"q": q})
     return results
+
+@app.post("/demo-v2")
+async def check_item_service(wsService: wsServiceIn):
+    lstParams = wsService.param
+    
+    for key, value in lstParams.items():
+        print(key, value, end='\n')
+
+    return wsServiceOut(status="0", message=wsService.wsCode + " - checked", data=lstParams)
